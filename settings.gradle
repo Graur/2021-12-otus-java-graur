@@ -1,3 +1,4 @@
 rootProject.name = '2021-12-otus-java-graur'
 
 include 'hw01-gradle'
+include 'L03-qa'
