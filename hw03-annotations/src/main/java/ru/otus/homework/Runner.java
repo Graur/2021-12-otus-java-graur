@@ -37,15 +37,23 @@ public class Runner {
 
     private void invokeAndCallTest(Class<?> clazz, Method method, Statistic statistic) {
         Object instant = null;
+        boolean isFailed = false;
         try {
             instant = ReflectionHelper.instantiate(clazz);
             ReflectionHelper.callMethod(instant, statistic.getBefore().getName());
             ReflectionHelper.callMethod(instant, method.getName());
-            statistic.increaseSucceedTestsCount();
         } catch (Exception | Error e) {
             statistic.increaseFailedTestsCount();
+            isFailed = true;
         } finally {
-            ReflectionHelper.callMethod(instant, statistic.getAfter().getName());
+            try {
+                ReflectionHelper.callMethod(instant, statistic.getAfter().getName());
+                statistic.increaseSucceedTestsCount();
+            } catch (RuntimeException e) {
+                if (!isFailed) {
+                    statistic.increaseFailedTestsCount();
+                }
+            }
         }
     }
 
