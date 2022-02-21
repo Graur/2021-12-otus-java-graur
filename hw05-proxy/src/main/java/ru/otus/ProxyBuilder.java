@@ -26,7 +26,8 @@ public class ProxyBuilder {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            annotatedMethods.stream().filter(currMethod -> currMethod.getName().equals(method.getName())
+            annotatedMethods.stream()
+                    .filter(currMethod -> currMethod.getName().equals(method.getName())
                     && Arrays.stream(currMethod.getParameterTypes()).allMatch(p -> Arrays.asList(method.getParameterTypes()).contains(p))
                     && currMethod.getParameterCount() == method.getParameterCount())
                     .forEach(currMethod -> System.out.printf("executed method: %s, params: %s%n", method.getName(), Arrays.asList(args)));
