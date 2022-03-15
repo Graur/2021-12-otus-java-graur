@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.data.Denomination;
 import ru.otus.exception.NotEnoughMoneyException;
-import ru.otus.service.ATMService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ATMTest {
 
-    private ATMService atmService;
+    private ATM atm;
 
     @BeforeEach
     void setUp() {
-        atmService = new ATMService();
+        atm = new ATM();
     }
 
     @Test
@@ -27,9 +26,9 @@ class ATMTest {
         //given
         List<Denomination> denominations = List.of(Denomination.HUNDRED, Denomination.FIVE_HUNDRED);
         //when
-        atmService.deposit(denominations);
+        atm.deposit(denominations);
         //then
-        assertEquals(600, atmService.checkBalance());
+        assertEquals(600, atm.checkBalance());
     }
 
     @Test
@@ -39,9 +38,9 @@ class ATMTest {
         int cash = 500;
         List<Denomination> denominations = new ArrayList<>();
         denominations.add(Denomination.FIVE_HUNDRED);
-        atmService.deposit(denominations);
+        atm.deposit(denominations);
         //when
-        List<Denomination> withdraw = atmService.withdraw(cash);
+        List<Denomination> withdraw = atm.withdraw(cash);
         //then
         assertEquals(denominations, withdraw);
     }
@@ -52,9 +51,9 @@ class ATMTest {
         //given
         List<Denomination> denominations = List.of(Denomination.HUNDRED, Denomination.FIVE_HUNDRED, Denomination.THOUSAND);
         //when
-        atmService.deposit(denominations);
+        atm.deposit(denominations);
         //then
-        assertEquals(1600, atmService.checkBalance());
+        assertEquals(1600, atm.checkBalance());
     }
 
     @Test
@@ -65,7 +64,7 @@ class ATMTest {
         //when
         NotEnoughMoneyException thrown = assertThrows(
                 NotEnoughMoneyException.class,
-                () -> atmService.withdraw(cash),
+                () -> atm.withdraw(cash),
                 "Expected  atm.withdraw() to throw, but it didn't"
         );
         //then
