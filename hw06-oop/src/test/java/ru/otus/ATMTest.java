@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import ru.otus.data.Denomination;
 import ru.otus.exception.NotEnoughMoneyException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,8 +35,7 @@ class ATMTest {
     void withdraw() throws NotEnoughMoneyException {
         //given
         int cash = 500;
-        List<Denomination> denominations = new ArrayList<>();
-        denominations.add(Denomination.FIVE_HUNDRED);
+        List<Denomination> denominations = List.of(Denomination.FIVE_HUNDRED);
         atm.deposit(denominations);
         //when
         List<Denomination> withdraw = atm.withdraw(cash);
