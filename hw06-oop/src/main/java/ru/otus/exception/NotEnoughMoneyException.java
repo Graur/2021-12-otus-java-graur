@@ -1,8 +1,6 @@
 package ru.otus.exception;
 
-import javax.naming.OperationNotSupportedException;
-
-public class NotEnoughMoneyException extends OperationNotSupportedException {
+public class NotEnoughMoneyException extends RuntimeException {
     public NotEnoughMoneyException() {
         super();
     }

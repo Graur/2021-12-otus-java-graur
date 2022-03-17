@@ -1,33 +1,48 @@
 package ru.otus;
 
-import ru.otus.data.Balance;
 import ru.otus.data.Denomination;
 import ru.otus.exception.NotEnoughMoneyException;
-import ru.otus.service.DepositService;
-import ru.otus.service.WithdrawService;
 
-import java.util.List;
+import java.util.*;
 
 public class ATM {
-    private final Balance balance;
-    private final DepositService depositService;
-    private final WithdrawService withdrawService;
+    private final Map<Denomination, Integer> atmDenominations;
 
     public ATM() {
-        this.balance = new Balance();
-        this.depositService = new DepositService();
-        this.withdrawService = new WithdrawService();
+        this.atmDenominations = new LinkedHashMap<>();
+        this.atmDenominations.put(Denomination.FIVE_THOUSAND, 0);
+        this.atmDenominations.put(Denomination.THOUSAND, 0);
+        this.atmDenominations.put(Denomination.FIVE_HUNDRED, 0);
+        this.atmDenominations.put(Denomination.HUNDRED, 0);
+        this.atmDenominations.put(Denomination.TEN, 0);
     }
 
     public void deposit(List<Denomination> denominations) {
-        balance.addBalance(depositService.apply(denominations));
+        denominations.forEach(denomination -> {
+            int count = atmDenominations.get(denomination);
+            atmDenominations.put(denomination, count + 1);
+        });
     }
 
-    public List<Denomination> withdraw(int cash) throws NotEnoughMoneyException {
-        return withdrawService.withdraw(cash, balance);
+    public List<Denomination> withdraw(int cash) {
+        if (cash > checkBalance()) {
+            throw new NotEnoughMoneyException("There is not enough money for this operation");
+        }
+        List<Denomination> withdrawCash = new ArrayList<>();
+        for (Denomination denomination : atmDenominations.keySet())  {
+            while(cash >= denomination.getAmount()) {
+                cash -= denomination.getAmount();
+                withdrawCash.add(denomination);
+            }
+        }
+        return withdrawCash;
     }
 
     public int checkBalance() {
-        return balance.getAmount();
+        int balance = 0;
+        for (Denomination denomination : atmDenominations.keySet()) {
+            balance += denomination.getAmount() * atmDenominations.get(denomination);
+        }
+        return balance;
     }
 }
