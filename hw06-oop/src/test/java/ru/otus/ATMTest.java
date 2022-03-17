@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.data.Denomination;
 import ru.otus.exception.NotEnoughMoneyException;
+import ru.otus.service.AtmService;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ class ATMTest {
 
     @BeforeEach
     void setUp() {
-        atm = new ATM();
+        atm = new AtmService();
     }
 
     @Test
