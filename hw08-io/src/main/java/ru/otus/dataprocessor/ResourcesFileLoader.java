@@ -2,6 +2,7 @@ package ru.otus.dataprocessor;
 
 import ru.otus.model.Measurement;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ru.otus.model.MeasurementMixIn;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -15,7 +16,7 @@ public class ResourcesFileLoader implements Loader {
 
     public ResourcesFileLoader(String fileName) {
         this.filename = fileName;
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = new ObjectMapper().addMixIn(Measurement.class, MeasurementMixIn.class);;
     }
 
     @Override
@@ -27,7 +28,7 @@ public class ResourcesFileLoader implements Loader {
     private File read() {
         URL resource = getClass().getClassLoader().getResource(this.filename);
         if (resource == null) {
-            throw new FileProcessException("file not found");
+            throw new FileProcessException("File not found by name: " + this.filename);
         } else {
             try {
                 return new File(resource.toURI());
