@@ -1,12 +1,11 @@
 package ru.otus.dataprocessor;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import ru.otus.model.Measurement;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.otus.model.MeasurementMixIn;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 
 public class ResourcesFileLoader implements Loader {
@@ -22,29 +21,11 @@ public class ResourcesFileLoader implements Loader {
     @Override
     public List<Measurement> load() {
         //читает файл, парсит и возвращает результат
-        return parse(read());
-    }
-
-    private File read() {
-        URL resource = getClass().getClassLoader().getResource(this.filename);
-        if (resource == null) {
-            throw new FileProcessException("File not found by name: " + this.filename);
-        } else {
-            try {
-                return new File(resource.toURI());
-            } catch (URISyntaxException e) {
-                throw new FileProcessException(e.getMessage());
-            }
-        }
-    }
-
-    private List<Measurement> parse(File file) {
-        List<Measurement> measurements;
         try {
-            measurements = objectMapper.readerForListOf(Measurement.class).readValue(file);
-        } catch (IOException e) {
-            throw new FileProcessException(e.getMessage());
+            InputStream is = getClass().getClassLoader().getResourceAsStream(this.filename);
+            return objectMapper.readValue(is, new TypeReference<>(){});
+        } catch (Exception e) {
+            throw new FileProcessException(e);
         }
-        return measurements;
     }
 }
