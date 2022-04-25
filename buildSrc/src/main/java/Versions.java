@@ -5,4 +5,5 @@ public interface Versions {
     String mockitoCore = "4.2.0";
     String mockitoJunit = "4.2.0";
     String lombok = "1.18.20";
+    String glassfishJson = "1.1.4";
 }
